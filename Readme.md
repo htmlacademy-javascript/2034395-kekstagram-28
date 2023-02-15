@@ -1,5 +1,4 @@
 # Личный проект «Кекстаграм»
-
 * Студент: [Кирилл Кузнецов](https://up.htmlacademy.ru/javascript/28/user/2034395).
 * Наставник: [Алексей Зольников](https://htmlacademy.ru/profile/id870391).
 
