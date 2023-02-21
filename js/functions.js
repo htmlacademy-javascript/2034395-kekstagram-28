@@ -1,62 +1,35 @@
-const validateStringLength = (string, maxLength) => string.length <= maxLength;
+const validateStringLength = (string, maxLength) => string.trim().length <= maxLength;
 
-function isStringPalindrome(string) {
-  let result = string.toLowerCase()
-    .split(" ")
-    .join("")
-    .split("");
+const isStringPalindrome = (string) => {
+  let result = string.toLowerCase().replace(/\W/g, '');
 
-  return result.join("") === result.reverse().join("");
+  return result === [...result].reverse().join('');
 }
 
-function getNumbersFromString(string) {
-  if (typeof string === "number") {
-    string = string.toString();
-  }
+const getNumbersFromString = (val) => parseInt(val.toString().replace(/\D/g, ''));
 
-  const splitString = string.split(" ")
-    .join("")
-    .split("");
-
-  const values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-  let result = [];
-
-  splitString.forEach(el => {
-    if (values.includes(parseInt(el))) {
-      result.push(el);
-    }
-  });
-
-  if (result.length === 0) {
-    return NaN;
-  }
-
-  return result.join("");
-}
-
-function supplementString(string, minLength, filling) {
+const supplementString = (string, minLength, filling) => {
   if (string.length >= minLength) {
     return string;
   }
 
-  let splitString = string.split("");
-  let splitFilling = filling.split("");
+  let splitString = string.split('');
+  let splitFilling = filling.split('');
 
   let diff = minLength - string.length;
 
   if (diff === splitFilling.length) {
     splitString.unshift(filling);
 
-    return splitString.join("");
+    return splitString.join('');
   }
 
   if (diff < splitFilling.length) {
     splitFilling.length = diff;
 
-    splitString.unshift(splitFilling.join(""));
+    splitString.unshift(splitFilling.join(''));
 
-    return splitString.join("");
+    return splitString.join('');
   }
 
   let insertsCount = diff / splitFilling.length;
@@ -76,7 +49,7 @@ function supplementString(string, minLength, filling) {
     }
   }
 
-  splitString.unshift(result.join(""));
+  splitString.unshift(result.join(''));
 
-  return splitString.join("");
+  return splitString.join('');
 }
