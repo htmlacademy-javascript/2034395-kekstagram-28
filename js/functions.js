@@ -1,22 +1,41 @@
-const ENV_MODES = {
-  dev: 'development',
-  prod: 'production'
-};
-
-const ENV_MODE = ENV_MODES.prod;
-
-const isDev = ENV_MODE === ENV_MODES.dev;
-
+/**
+ * Checks a string for the specified maximum length
+ *
+ * @param {string} string String to check
+ * @param {number} maxLength Max length of string
+ * @return {boolean} String test result
+ */
 const validateStringLength = (string, maxLength) => string.trim().length <= maxLength;
 
+/**
+ * Checks if a string is a palindrome
+ *
+ * @param {string} string String to check
+ * @return {boolean} String test result
+ */
 const isStringPalindrome = (string) => {
   const result = string.toLowerCase().replace(/\W/g, '');
 
   return result === [...result].reverse().join('');
 };
 
+/**
+ * Gets all numbers from string and concat them
+ *
+ * @param val Any value which contains numbers
+ * @return {number|NaN} All numbers that were found and combined into one number or NaN if numbers not exists
+ */
 const getNumbersFromString = (val) => parseInt(val.toString().replace(/\D/g, ''), 10);
 
+/**
+ * If the length of the string is less than that specified in minLength, then it inserts the value
+ * specified in filling at the beginning of it exactly as many times as necessary until the string is exactly completed
+ *
+ * @param {string} string String which need to be supplemented
+ * @param {number} minLength Minimal length of string
+ * @param {string} filling Supplement to origin string
+ * @return {string} Supplemented with filling origin string
+ */
 const supplementString = (string, minLength, filling) => {
   if (string.length >= minLength) {
     return string;
@@ -63,69 +82,15 @@ const supplementString = (string, minLength, filling) => {
   return splitString.join('');
 };
 
+/**
+ * Returns a floating point number compressed to the minimum length without losing the mathematical value
+ *
+ * @param val Any value which contains number (integer or float)
+ * @return {string} Floating point number
+ */
 const getClearFloat = (val) =>
   val - parseInt(val, 10) === 0 ?
     parseFloat(val).toFixed(1) :
     Number(parseFloat(val).toFixed(4)).toString();
 
-// testing module
-if (isDev) {
-  // eslint-disable-next-line no-console
-  console.log('!!! DEVELOPER MODE ENABLED !!! \n');
-
-  const markVarAsString = (val) => typeof val === 'string' ? `'${val}'` : val;
-
-  const test = (expected, func, ...args) => {
-    const result = func(...args);
-
-    let _args = [...args].map((el) => `${markVarAsString(el)} (${typeof el}) \n`);
-
-    _args = _args.join(' ');
-
-    // eslint-disable-next-line no-console
-    console.log(`Проверяется функция ${func.name}() с аргументами: \n
-    ${_args}
-    Ожидается: ${markVarAsString(expected)} (${typeof expected}), ответ: ${markVarAsString(result)} (${typeof result}) \n`);
-  };
-
-  // validateStringLength(string: string, maxLength: number)
-  test(true, validateStringLength, 'проверяемая строка', 20);
-  test(true, validateStringLength, 'проверяемая строка', 18);
-  test(false, validateStringLength, 'проверяемая строка', 10);
-
-  // isStringPalindrome(string: string)
-  test(true, isStringPalindrome, 'топот');
-  test(true, isStringPalindrome, 'ДовОд');
-  test(false, isStringPalindrome, 'Кекс');
-  test(true, isStringPalindrome, 'Лёша на полке клопа нашёл');
-
-  // getNumbersFromString(val: string|number)
-  test(2023, getNumbersFromString, '2023 год');
-  test(2022, getNumbersFromString, 'ECMAScript 2022');
-  test(105, getNumbersFromString, '1 кефир, 0.5 батона');
-  test(7, getNumbersFromString, 'агент 007');
-  test(NaN, getNumbersFromString, 'а я томат');
-  test(2023, getNumbersFromString, 2023);
-  test(1, getNumbersFromString, -1);
-  test(15, getNumbersFromString, 1.5);
-
-  // supplementString(string: string, minLength: number, filling: string)
-  test('01', supplementString, '1', 2, '0');
-  test('0001', supplementString, '1', 4, '0');
-  test('werq', supplementString, 'q', 4, 'werty');
-  test('wweq', supplementString, 'q', 4, 'we');
-  test('qwerty', supplementString, 'qwerty', 2, '0');
-
-  // getClearFloat(val: number)
-  test('1.0', getClearFloat, '1');
-  test('1.0', getClearFloat, 1);
-  test('1.0', getClearFloat, '1.00000');
-  test('1.0', getClearFloat, 1.0000);
-  test('1.0', getClearFloat, '1.0');
-  test('1.0001', getClearFloat, '1.0001');
-  test('1.0001', getClearFloat, '1.000111');
-  test('1.001', getClearFloat, '1.001');
-  test('1.01', getClearFloat, '1.01');
-  test('1.1', getClearFloat, '1.100');
-  test('2.11', getClearFloat, '2.110034582');
-}
+export {validateStringLength, isStringPalindrome, getNumbersFromString, supplementString, getClearFloat};
