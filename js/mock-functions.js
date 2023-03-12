@@ -24,7 +24,7 @@ const generateComment = (id, postId) => ({
  */
 const generatePost = (id) => ({
   id,
-  url: `photos/${id}.jpg`,
+  url: `photos/${id + 1}.jpg`,
   description: getRandomElement(TEST_DESCRIPTIONS),
   likes: getRandomInt(15, 200),
   comments: createArray(getRandomInt(1, 15), generateComment, id)
