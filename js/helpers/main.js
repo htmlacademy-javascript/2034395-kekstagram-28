@@ -93,4 +93,29 @@ const getClearFloat = (val) =>
     parseFloat(val).toFixed(1) :
     Number(parseFloat(val).toFixed(4)).toString();
 
-export {validateStringLength, isStringPalindrome, getNumbersFromString, supplementString, getClearFloat};
+/**
+ * Gets random integer in range
+ *
+ * @param {number} min Minimum value
+ * @param {number} max Maximum value
+ * @return {number} Value in range
+ */
+const getRandomInt = (min, max) => Math.round(min - 0.5 + Math.random() * (max - min + 1));
+
+/**
+ * Gets random element from array
+ *
+ * @param {array} array
+ * @return {*}
+ */
+const getRandomElement = (array) => array[getRandomInt(0, array.length - 1)];
+
+export {
+  validateStringLength,
+  isStringPalindrome,
+  getNumbersFromString,
+  supplementString,
+  getClearFloat,
+  getRandomInt,
+  getRandomElement,
+};
