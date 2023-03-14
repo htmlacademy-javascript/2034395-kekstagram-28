@@ -1,11 +1,11 @@
-import {test} from './utils.js';
+import test from './helpers/test.js';
 import {
   getClearFloat,
   getNumbersFromString,
   isStringPalindrome,
   supplementString,
   validateStringLength
-} from './functions';
+} from './helpers/main.js';
 
 const ENV_MODES = {
   dev: 'development',
