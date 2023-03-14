@@ -2,44 +2,29 @@ import {getRandomElement, getRandomInt} from '../helpers/main.js';
 import {TEST_COMMENTS, TEST_NAMES} from '../utils/const.js';
 
 class Comment {
-  _avatar = null;
-  _message = null;
-  _name = null;
-
   /**
    * @param {int} id
+   * @param {string} avatarUrl
+   * @param {string} message
+   * @param {string} name
    */
-  constructor(id) {
+  constructor(id, avatarUrl, message, name) {
     this._id = id;
+    this._avatar = avatarUrl;
+    this._message = message;
+    this._name = name;
   }
 
-  /**
-   * @param {?string} url
-   */
-  set avatar(url) {
-    this._avatar = url;
+  get id() {
+    return this._id;
   }
 
   get avatar() {
     return this._avatar;
   }
 
-  /**
-   * @param {?string} message
-   */
-  set message(message) {
-    this._message = message;
-  }
-
   get message() {
     return this._message;
-  }
-
-  /**
-   * @param {?string} name
-   */
-  set name(name) {
-    this._name = name;
   }
 
   get name() {
@@ -54,13 +39,12 @@ class Comment {
    * @return {Comment}
    */
   static mock(id, postId) {
-    const comment = new this(parseInt(postId.toString() + id, 10));
-
-    comment.avatar = `img/avatar-${getRandomInt(1, 6)}.svg`;
-    comment.message = getRandomElement(TEST_COMMENTS);
-    comment.name = getRandomElement(TEST_NAMES);
-
-    return comment;
+    return new this(
+      parseInt(postId.toString() + id, 10),
+      `img/avatar-${getRandomInt(1, 6)}.svg`,
+      getRandomElement(TEST_COMMENTS),
+      getRandomElement(TEST_NAMES)
+    );
   }
 }
 

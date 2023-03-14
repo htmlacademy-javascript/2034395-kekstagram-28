@@ -3,56 +3,35 @@ import {TEST_DESCRIPTIONS} from '../utils/const.js';
 import Comment from './Comment.js';
 
 class Post {
-  _url = null;
-  _description = null;
-  _likes = null;
-  _comments = [];
-
   /**
    * @param {int} id
+   * @param {?string} url
+   * @param {?string} description
+   * @param {?int} likes
+   * @param {Comment[]} comments
    */
-  constructor(id) {
-    this.id = id;
+  constructor(id, url, description, likes, comments) {
+    this._id = id;
+    this._url = url;
+    this._description = description;
+    this._likes = likes;
+    this._comments = comments;
   }
 
-  /**
-   * @param {?string} url
-   */
-  set url(url) {
-    this._url = url;
+  get id() {
+    return this._id;
   }
 
   get url() {
     return this._url;
   }
 
-  /**
-   * @param {?string} description
-   */
-  set description(description) {
-    this._description = description;
-  }
-
   get description() {
     return this._description;
   }
 
-  /**
-   * @param {?int} likes
-   */
-  set likes(likes) {
-    this._likes = likes;
-  }
-
   get likes() {
     return this._likes;
-  }
-
-  /**
-   * @param {Comment[]} comments
-   */
-  set comments(comments) {
-    this._comments = comments;
   }
 
   get comments() {
@@ -66,14 +45,13 @@ class Post {
    * @return {Post}
    */
   static mock(id) {
-    const post = new this(id);
-
-    post.url = `photos/${id + 1}.jpg`;
-    post.description = getRandomElement(TEST_DESCRIPTIONS);
-    post.likes = getRandomInt(15, 200);
-    post.comments = Array.from({length: getRandomInt(1, 15)}, (_, key) => Comment.mock(key, id));
-
-    return post;
+    return new this(
+      id,
+      `photos/${id + 1}.jpg`,
+      getRandomElement(TEST_DESCRIPTIONS),
+      getRandomInt(15, 200),
+      Array.from({length: getRandomInt(1, 15)}, (_, key) => Comment.mock(key, id))
+    );
   }
 
   /**
