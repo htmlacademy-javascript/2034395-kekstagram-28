@@ -1,6 +1,6 @@
 import {renderPictures} from './helpers/render.js';
-import Post from './models/Post.js';
+import Mock from './models/Mock.js';
 
-const posts = Array.from({length: 25}, (_, key) => Post.mock(key));
+const posts = Array.from({length: 25}, (_, key) => (new Mock()).getPost(key));
 
 renderPictures(posts);

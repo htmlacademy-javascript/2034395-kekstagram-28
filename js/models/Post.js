@@ -1,7 +1,3 @@
-import {getRandomElement, getRandomInt} from '../helpers/main.js';
-import {TEST_DESCRIPTIONS} from '../utils/const.js';
-import Comment from './Comment.js';
-
 class Post {
   /**
    * @param {int} id
@@ -36,22 +32,6 @@ class Post {
 
   get comments() {
     return this._comments;
-  }
-
-  /**
-   * Generates mock post
-   *
-   * @param {number} id Post identifier
-   * @return {Post}
-   */
-  static mock(id) {
-    return new this(
-      id,
-      `photos/${id + 1}.jpg`,
-      getRandomElement(TEST_DESCRIPTIONS),
-      getRandomInt(15, 200),
-      Array.from({length: getRandomInt(1, 15)}, (_, key) => Comment.mock(key, id))
-    );
   }
 
   /**
