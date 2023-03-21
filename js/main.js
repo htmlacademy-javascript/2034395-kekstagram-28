@@ -1,6 +1,6 @@
-import {generatePost} from './mockFunctions.js';
-import {createArray} from './utils.js';
+import {renderPictures} from './helpers/render.js';
+import Mock from './models/Mock.js';
 
-const mockPosts = createArray(25, generatePost);
+const posts = Array.from({length: 25}, (_, key) => (new Mock()).getPost(key));
 
-console.log(mockPosts);
+renderPictures(posts);
