@@ -44,6 +44,7 @@ class Post {
 
     const picture = template.content.cloneNode(true);
 
+    picture.querySelector('.picture').id = this.id.toString();
     picture.querySelector('.picture__img').src = this.url;
     picture.querySelector('.picture__comments').textContent = this.comments.length.toString();
     picture.querySelector('.picture__likes').textContent = this.likes.toString();
