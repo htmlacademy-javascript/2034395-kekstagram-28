@@ -11,11 +11,31 @@ const closeBigPicture = () => {
   document.querySelector('.comments-loader').classList.remove('hidden');
   document.querySelector('body').classList.remove('modal-open');
 
-  const commentsCollection = document.querySelector('.social__comments');
+  const commentsBlock = document.querySelector('.social__comments');
 
-  const comments = Array.from(commentsCollection.children);
+  const comments = Array.from(commentsBlock.children);
 
   comments.forEach((comment) => comment.remove());
+};
+
+/**
+ * Render Document Fragment with prepared comments in comments block
+ *
+ * @param {Comment[]} comments
+ */
+const renderComments = (comments) => {
+  const commentsBlock = document.querySelector('.social__comments');
+  const commentsCount = commentsBlock.children.length;
+
+  const commentsFragment = new DocumentFragment();
+
+  comments
+    .slice(commentsCount - 1, commentsCount + 4)
+    .forEach((comment) => commentsFragment.append(comment.prepareComment()));
+
+  commentsBlock.appendChild(commentsFragment);
+
+  document.querySelector('.social__comment-count').textContent = commentsCount.toString();
 };
 
 /**
@@ -46,13 +66,7 @@ const renderPictures = (posts) => {
         document.querySelector('.comments-count').textContent = post.comments.length.toString();
         document.querySelector('.social__caption').textContent = post.description;
 
-        const commentsFragment = new DocumentFragment();
-
-        post.comments.forEach((comment) => commentsFragment.append(comment.prepareComment()));
-
-        const comments = document.querySelector('.social__comments');
-
-        comments.appendChild(commentsFragment);
+        renderComments(post.comments);
 
         showBigPicture();
       });
