@@ -1634,6 +1634,11 @@ prelude-ls@^1.2.1:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.2.1.tgz#debc6489d7a6e6b0e7611888cec880337d316396"
   integrity sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==
 
+pristinejs@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/pristinejs/-/pristinejs-1.1.0.tgz#8ef8e628eca6fc6db9f6d405be4d51d2ef7f41af"
+  integrity sha512-ardy/YEaZr5E1l0YM2eOkeQx0KoenQjBa7HkfX4Dt0PmqKhZUfyAIT9Qk23vGv4vvvWy/zb/eBe6sSsKUtahrg==
+
 prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
