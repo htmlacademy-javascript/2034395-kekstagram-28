@@ -1,3 +1,7 @@
+import Validator from '../models/Validator.js';
+
+let isFieldInFocus = false;
+
 const editImage = () => {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -12,4 +16,32 @@ const closeEditor = () => {
   document.querySelector('#upload-file').value = null;
 };
 
-export {editImage, closeEditor};
+const initAddImageForm = () => {
+  const addImageForm = document.querySelector('#upload-select-image');
+
+  const addImageFormValidator = new Validator(addImageForm, Validator.ADD_IMAGE_FORM_VALIDATOR);
+
+  addImageForm.addEventListener('submit', addImageFormValidator.validate);
+
+  document.querySelector('#upload-file').onchange = () => editImage();
+
+  // toggle Esc close event on focus/blur for hashtags field
+  document.querySelector('.text__hashtags').onfocus = () => {
+    isFieldInFocus = true;
+  };
+  document.querySelector('.text__hashtags').onblur = () => {
+    isFieldInFocus = false;
+  };
+
+  // toggle Esc close event on focus/blur for description field
+  document.querySelector('.text__description').onfocus = () => {
+    isFieldInFocus = true;
+  };
+  document.querySelector('.text__description').onblur = () => {
+    isFieldInFocus = false;
+  };
+
+  document.querySelector('#upload-cancel').addEventListener('click', closeEditor);
+};
+
+export {closeEditor, initAddImageForm, isFieldInFocus};
