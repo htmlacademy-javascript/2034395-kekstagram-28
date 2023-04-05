@@ -1,21 +1,14 @@
-import Pristine from 'pristinejs/dist/pristine.js';
-
 class Validator {
   static ADD_IMAGE_FORM_VALIDATOR = 'addImage';
 
-  static VALIDATORS_METHODS = {
-    ADD_IMAGE_FORM_VALIDATOR: (pristine, fields) => self.addImageFormValidator(pristine, fields),
-  };
-
   /**
-   * @param {Element} form Form to validate
+   * @param {HTMLFormElement} form Form to validate
    * @param {string} validator Name of validator, prefer to use class constants
-   * @param {string|string[]} fields
    */
-  constructor(form, validator, fields = 'all') {
-    const pristine = new Pristine(form);
-
-    this.validateMethod = self.VALIDATORS_METHODS[validator](pristine, fields);
+  constructor(form, validator) {
+    this.form = form;
+    this.pristine = new Pristine(form);
+    this.validator = validator;
   }
 
   /**
@@ -28,48 +21,60 @@ class Validator {
   validate(e) {
     e.preventDefault();
 
-    this.validateMethod();
-  }
+    let isValid = true;
 
-  /**
-   * Checks if fields should be validated
-   *
-   * @param {string | string[]} fields
-   * @param {string} field
-   * @returns {boolean}
-   */
-  shouldValidateField(fields, field) {
-    return fields === field || fields.includes(field) || field === 'all';
+    switch (this.validator) {
+      case self.ADD_IMAGE_FORM_VALIDATOR:
+        isValid = (new Validator(this.form, this.validator)).addImageFormValidator();
+        break;
+      default:
+        isValid = false;
+        break;
+    }
+
+    if (isValid) {
+      this.form.submit();
+      return true;
+    }
+
+    return false;
   }
 
   /**
    * Add Image Form validator
    *
-   * @param {Pristine} pristine
-   * @param {string | string[]} fields
-   *
    * @return {boolean}
    */
-  addImageFormValidator(pristine, fields) {
-    if (!pristine || !fields) {
+  addImageFormValidator() {
+    if (!this.pristine) {
       return false;
     }
 
-    if (self.shouldValidateField(fields, 'hashtags')) {
-      // const hashtags = document.querySelector('.text__hashtags').value;
+    const hashtags = document.querySelector('.text__hashtags');
 
-      // const splitHashtags = hashtags.split();
+    const splitHashtags = hashtags.value.split().map((el) => el.toLowerCase());
 
-      // splitHashtags.forEach((hashtag) => {
-      //
-      // });
-    }
+    const validateHashtags = () => {
+      if (splitHashtags.length > 5) {
+        return false;
+      }
 
-    if (self.shouldValidateField(fields, 'description')) {
-      // const description = document.querySelector('.text__description').value;
-    }
+      if (splitHashtags.length !== new Set(splitHashtags).size) {
+        return false;
+      }
 
-    return pristine.validate(null, false);
+      splitHashtags.forEach((hashtag) => {
+        const regexp = /^#[a-zа-яё0-9]{1, 19}$/i;
+
+        if (!regexp.test(hashtag.toString())) {
+          return false;
+        }
+      });
+    };
+
+    this.pristine.addValidator(hashtags, validateHashtags, 'Формат введенных хэштегов не соответствует требованиям.');
+
+    return this.pristine.validate();
   }
 }
 

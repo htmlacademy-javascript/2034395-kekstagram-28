@@ -10,9 +10,8 @@ initAddImageForm();
 
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Escape') {
-    closeBigPicture();
-
     if (!isFieldInFocus) {
+      closeBigPicture();
       closeEditor();
     }
   }

@@ -19,9 +19,9 @@ const closeEditor = () => {
 const initAddImageForm = () => {
   const addImageForm = document.querySelector('#upload-select-image');
 
-  const addImageFormValidator = new Validator(addImageForm, Validator.ADD_IMAGE_FORM_VALIDATOR);
+  const validator = new Validator(addImageForm, Validator.ADD_IMAGE_FORM_VALIDATOR);
 
-  addImageForm.addEventListener('submit', addImageFormValidator.validate);
+  addImageForm.addEventListener('submit', validator.validate);
 
   document.querySelector('#upload-file').onchange = () => editImage();
 
