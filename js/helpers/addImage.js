@@ -2,6 +2,9 @@ import Validator from '../models/Validator.js';
 
 let isFieldInFocus = false;
 
+/**
+ * Open add image form after image load
+ */
 const editImage = () => {
   document.querySelector('.img-upload__overlay').classList.remove('hidden');
   document.body.classList.add('modal-open');
@@ -9,17 +12,23 @@ const editImage = () => {
   document.querySelector('.img-upload__preview').children[0].src = 'soon';
 };
 
+/**
+ * Close add image form
+ */
 const closeEditor = () => {
   document.querySelector('.img-upload__overlay').classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  document.querySelector('#upload-file').value = null;
+  document.querySelector('#upload-select-image').reset();
 };
 
+/**
+ * Add event listeners on add image form && add validation
+ */
 const initAddImageForm = () => {
   const addImageForm = document.querySelector('#upload-select-image');
 
-  const validator = new Validator(addImageForm, Validator.ADD_IMAGE_FORM_VALIDATOR);
+  const validator = new Validator(Validator.ADD_IMAGE_FORM_VALIDATOR);
 
   addImageForm.addEventListener('submit', validator.validate);
 
