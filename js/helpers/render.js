@@ -141,6 +141,10 @@ const renderPictures = (posts) => {
       showBigPicture();
     });
   });
+
+  document
+    .querySelector('.big-picture__cancel')
+    .addEventListener('click', closeBigPicture);
 };
 
 export {showBigPicture, closeBigPicture, renderPictures};
