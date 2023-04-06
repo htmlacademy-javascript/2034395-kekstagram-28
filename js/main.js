@@ -2,11 +2,12 @@ import {closeBigPicture, showAlert} from './helpers/render.js';
 import {closeEditor, initAddImageForm, isFieldInFocus} from './helpers/addImage.js';
 import ApiService from './api/ApiService.js';
 
-try {
-  (new ApiService()).getPosts();
-} catch (e) {
-  showAlert(true, e.message);
-}
+(new ApiService())
+  .getPosts()
+  .then(() => {
+    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+  })
+  .catch((e) => showAlert(true, e.message));
 
 initAddImageForm();
 

@@ -30,4 +30,5 @@ export const TEST_COMMENTS = [
     'Своя компания - это компания, в которой можно не думать когда говоришь.',
     'Живи, братуха, и не думай, что кто-то про тебя забыл. Друзья не забывают друга, а кто забыл, тот не был им.'
   ],
-  API_URI = 'https://28.javascript.pages.academy/kekstagram';
+  API_URI = 'https://28.javascript.pages.academy/kekstagram',
+  FILE_TYPES = ['jpg', 'jpeg', 'png'];
