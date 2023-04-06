@@ -1,4 +1,6 @@
 import Validator from '../models/Validator.js';
+import {FILE_TYPES} from '../utils/const.js';
+import {showAlert} from './render.js';
 
 const preview = document.querySelector('.img-upload__preview').children[0];
 
@@ -44,16 +46,6 @@ const filters = {
 };
 
 /**
- * Open add image form after image load
- */
-const editImage = () => {
-  document.querySelector('.img-upload__overlay').classList.remove('hidden');
-  document.body.classList.add('modal-open');
-
-  // document.querySelector('.img-upload__preview').children[0].src = 'soon';
-};
-
-/**
  * Close add image form
  */
 const closeEditor = () => {
@@ -61,6 +53,27 @@ const closeEditor = () => {
   document.body.classList.remove('modal-open');
 
   document.querySelector('#upload-select-image').reset();
+};
+
+/**
+ * Open add image form after image load
+ */
+const editImage = () => {
+  document.querySelector('.img-upload__overlay').classList.remove('hidden');
+  document.body.classList.add('modal-open');
+
+  const file = document.querySelector('#upload-file').files[0];
+
+  if (FILE_TYPES.some((ext) => file.name.toLowerCase().endsWith(ext))) {
+    preview.src = URL.createObjectURL(file);
+
+    document.querySelectorAll('.effects__preview').forEach((el) => {
+      el.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+    });
+  } else {
+    showAlert(true, 'Файл не соответствует формату');
+    closeEditor();
+  }
 };
 
 /**
