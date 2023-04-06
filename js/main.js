@@ -1,10 +1,12 @@
-import {closeBigPicture, renderPictures} from './helpers/render.js';
+import {closeBigPicture} from './helpers/render.js';
 import {closeEditor, initAddImageForm, isFieldInFocus} from './helpers/addImage.js';
-import Mock from './models/Mock.js';
+import ApiService from './api/ApiService.js';
 
-const posts = Array.from({length: 25}, (_, key) => (new Mock()).getPost(key));
-
-renderPictures(posts);
+try {
+  (new ApiService()).getPosts();
+} catch (e) {
+  alert(e.message);
+}
 
 initAddImageForm();
 

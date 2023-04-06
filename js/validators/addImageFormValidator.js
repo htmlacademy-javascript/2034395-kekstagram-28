@@ -1,9 +1,11 @@
+import ApiService from '../api/ApiService.js';
+
 /**
  * Add Image Form validator
  *
  * @return {boolean}
  */
-export default () => {
+export default async () => {
   const regexp = /^#[a-zа-яё0-9]{1,19}$/i;
 
   const form = document.querySelector('#upload-select-image');
@@ -33,6 +35,13 @@ export default () => {
     return false;
   }
 
-  form.submit();
+  await (new ApiService()).createPost(new FormData(form))
+    .then((data) => {
+      console.log(data);
+      form.reset();
+      alert('Фотография отправлена!');
+    })
+    .catch((e) => alert(e.message));
+
   return true;
 };
