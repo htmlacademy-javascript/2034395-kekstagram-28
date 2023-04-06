@@ -1,5 +1,8 @@
 let commentsCount = 0;
 
+const alertsQueue = [];
+let isAlertActive = false;
+
 /**
  * Show big picture block
  */
@@ -147,4 +150,37 @@ const renderPictures = (posts) => {
     .addEventListener('click', closeBigPicture);
 };
 
-export {showBigPicture, closeBigPicture, renderPictures};
+const renderAlert = () => {
+  if (isAlertActive) {
+    return;
+  }
+
+  isAlertActive = true;
+
+  const data = alertsQueue.shift();
+
+  const alert = document.querySelector('.alert');
+
+  const type = data.isError ? 'error' : 'success';
+
+  document.querySelector('.alert__message').textContent = data.message;
+
+  document.querySelector('.alert__title').textContent = data.isError ? 'Ошибка' : 'Успех';
+  alert.classList.add(`alert--${type}`);
+  setTimeout(() => {
+    alert.classList.remove(`alert--${type}`);
+    isAlertActive = false;
+
+    if (alertsQueue.length > 0) {
+      setTimeout(() => renderAlert(), 1000);
+    }
+  }, 6500);
+};
+
+const showAlert = (isError, message) => {
+  alertsQueue.push({isError, message});
+
+  renderAlert();
+};
+
+export {showBigPicture, closeBigPicture, renderPictures, showAlert};
