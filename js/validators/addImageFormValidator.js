@@ -1,4 +1,6 @@
 import ApiService from '../api/ApiService.js';
+import {showAlert} from '../helpers/render.js';
+import {closeEditor} from '../helpers/addImage.js';
 
 /**
  * Add Image Form validator
@@ -10,14 +12,7 @@ export default async () => {
 
   const form = document.querySelector('#upload-select-image');
   const hashtagsField = document.querySelector('#add-image-hashtags');
-  const pristine = new Pristine(
-    form,
-    {
-      classTo: 'img-upload__field-wrapper',
-      errorTextParent: 'img-upload__field-wrapper',
-      errorTextClass: 'img-upload__error-text',
-    }
-  );
+  const pristine = new Pristine(form);
 
   const isDuplicates = (hashtags) => hashtags.length !== new Set(hashtags).size;
   const isCountValid = (hashtags) => hashtags.length <= 5;
@@ -36,12 +31,12 @@ export default async () => {
   }
 
   await (new ApiService()).createPost(new FormData(form))
-    .then((data) => {
-      console.log(data);
+    .then(() => {
       form.reset();
-      alert('Фотография отправлена!');
+      closeEditor();
+      showAlert(false, 'Фотография отправлена');
     })
-    .catch((e) => alert(e.message));
+    .catch((e) => showAlert(true, e.message));
 
   return true;
 };

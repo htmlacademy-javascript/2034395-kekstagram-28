@@ -1,11 +1,11 @@
-import {closeBigPicture} from './helpers/render.js';
+import {closeBigPicture, showAlert} from './helpers/render.js';
 import {closeEditor, initAddImageForm, isFieldInFocus} from './helpers/addImage.js';
 import ApiService from './api/ApiService.js';
 
 try {
   (new ApiService()).getPosts();
 } catch (e) {
-  alert(e.message);
+  showAlert(true, e.message);
 }
 
 initAddImageForm();
