@@ -26,7 +26,7 @@ class ApiService {
             renderPictures(_posts);
           });
       })
-      .catch((event) => showAlert(true, event.message));
+      .catch((error) => showAlert(true, error.message));
   }
 
   /**
