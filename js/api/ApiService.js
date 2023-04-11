@@ -14,25 +14,27 @@ class ApiService {
     await fetch(`${API_URI}/data`)
       .then((data) => {
         data.json()
-          .then((result) => {
-            const posts = result.map((el) => {
-              if (el.id === undefined) {
+          .then((posts) => {
+            const _posts = posts.map((post) => {
+              if (post.id === undefined) {
                 throw new NoContentException();
               }
 
-              return new Post(el.id, el.url, el.description, el.likes, el.comments);
+              return new Post(post.id, post.url, post.description, post.likes, post.comments);
             });
 
-            renderPictures(posts);
+            renderPictures(_posts);
           });
       })
-      .catch((e) => showAlert(true, e.message));
+      .catch((event) => showAlert(true, event.message));
   }
 
   /**
+   * Send new post to server
    *
    * @param {FormData} data
    * @returns {Promise<any>}
+   * @throws {PostNotSentException}
    */
   async createPost(data) {
     await fetch(API_URI, {
@@ -41,7 +43,7 @@ class ApiService {
       body: data,
     })
       .then((response) => {
-        if (!response.ok) {
+        if (response.status === 200) {
           throw new PostNotSentException();
         }
       });

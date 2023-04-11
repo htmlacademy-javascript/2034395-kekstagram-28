@@ -1,73 +1,53 @@
 import Validator from '../models/Validator.js';
-import {FILE_TYPES} from '../utils/const.js';
+import {
+  DESCRIPTION_ELEMENT,
+  EFFECT_FILTER_RADIOS,
+  EFFECT_LEVEL_ELEMENT,
+  EFFECT_LEVEL_VALUE_ELEMENT, EFFECT_SCALE_CONTROL_BIGGER_ELEMENT, EFFECT_SCALE_CONTROL_SMALLER_ELEMENT,
+  EFFECT_SLIDER_ELEMENT,
+  EFFECTS_FILTERS,
+  EFFECTS_PREVIEW_ELEMENTS,
+  FILE_TYPES,
+  HASHTAGS_ELEMENT,
+  IMAGE_SCALE_MAX,
+  IMAGE_SCALE_MIN,
+  IMAGE_SCALE_STEP,
+  SCALE_VALUE_ELEMENT, UPLOAD_CANCEL_ELEMENT,
+  UPLOAD_FILE_ELEMENT,
+  UPLOAD_FORM_ELEMENT,
+  UPLOAD_FORM_OVERLAY_ELEMENT
+} from '../utils/const.js';
 import {showAlert} from './render.js';
 
 const preview = document.querySelector('.img-upload__preview').children[0];
 
 let isFieldInFocus = false;
-let scale = 100;
+let scale = IMAGE_SCALE_MAX;
 let filter = 'none';
-const filters = {
-  'chrome': {
-    min: 0,
-    max: 1,
-    current: 1,
-    step: 0.1,
-    filter: (value) => `grayscale(${value})`,
-  },
-  'sepia': {
-    min: 0,
-    max: 1,
-    current: 1,
-    step: 0.1,
-    filter: (value) => `sepia(${value})`,
-  },
-  'marvin': {
-    min: 0,
-    max: 100,
-    current: 100,
-    step: 1,
-    filter: (value) => `invert(${value}%)`,
-  },
-  'phobos': {
-    min: 0,
-    max: 3,
-    current: 3,
-    step: 0.1,
-    filter: (value) => `blur(${value}px)`,
-  },
-  'heat': {
-    min: 0,
-    max: 3,
-    current: 3,
-    step: 0.1,
-    filter: (value) => `brightness(${value})`,
-  },
-};
 
 /**
  * Close add image form
  */
 const closeEditor = () => {
-  document.querySelector('.img-upload__overlay').classList.add('hidden');
+  UPLOAD_FORM_OVERLAY_ELEMENT.classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  document.querySelector('#upload-select-image').reset();
+  UPLOAD_FORM_ELEMENT.reset();
 };
 
 /**
  * Open add image form after image load
  */
 const editImage = () => {
-  document.querySelector('.img-upload__overlay').classList.remove('hidden');
+  UPLOAD_FORM_OVERLAY_ELEMENT.classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  const file = document.querySelector('#upload-file').files[0];
+  const file = UPLOAD_FILE_ELEMENT.files[0];
 
   if (FILE_TYPES.some((ext) => file.name.toLowerCase().endsWith(ext))) {
     preview.src = URL.createObjectURL(file);
 
-    document.querySelectorAll('.effects__preview').forEach((el) => {
+    EFFECTS_PREVIEW_ELEMENTS.forEach((el) => {
       el.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
     });
   } else {
@@ -84,43 +64,43 @@ const editImage = () => {
 const scaleImage = (type = null) => {
   switch (type) {
     case 'bigger':
-      scale += 25;
+      scale += IMAGE_SCALE_STEP;
       break;
     case 'smaller':
-      scale -= 25;
+      scale -= IMAGE_SCALE_STEP;
       break;
     default:
-      scale = 100;
+      scale = IMAGE_SCALE_MAX;
       break;
   }
 
-  if (scale < 25) {
-    scale = 25;
+  if (scale < IMAGE_SCALE_MIN) {
+    scale = IMAGE_SCALE_MIN;
   }
 
-  if (scale > 100) {
-    scale = 100;
+  if (scale > IMAGE_SCALE_MAX) {
+    scale = IMAGE_SCALE_MAX;
   }
 
   preview.style.transform = `scale(${scale / 100})`;
-  document.querySelector('.scale__control--value').value = `${scale}%`;
+  SCALE_VALUE_ELEMENT.value = `${scale}%`;
 };
 
 /**
  * Toggle Esc close event on focus/blur for hashtags/description fields
  */
 const switchFieldsFocus = () => {
-  document.querySelector('.text__hashtags').onfocus = () => {
+  HASHTAGS_ELEMENT.onfocus = () => {
     isFieldInFocus = true;
   };
-  document.querySelector('.text__hashtags').onblur = () => {
+  HASHTAGS_ELEMENT.onblur = () => {
     isFieldInFocus = false;
   };
 
-  document.querySelector('.text__description').onfocus = () => {
+  DESCRIPTION_ELEMENT.onfocus = () => {
     isFieldInFocus = true;
   };
-  document.querySelector('.text__description').onblur = () => {
+  DESCRIPTION_ELEMENT.onblur = () => {
     isFieldInFocus = false;
   };
 };
@@ -129,13 +109,11 @@ const switchFieldsFocus = () => {
  * Add and configure noUiSlider
  */
 const initSlider = () => {
-  const slider = document.querySelector('.effect-level__slider');
+  EFFECT_LEVEL_ELEMENT.classList.remove('hidden');
 
-  document.querySelector('.effect-level').classList.remove('hidden');
+  const filterConfig = EFFECTS_FILTERS[filter];
 
-  const filterConfig = filters[filter];
-
-  document.querySelector('.effect-level__value').value = filterConfig.current;
+  EFFECT_LEVEL_VALUE_ELEMENT.value = filterConfig.current;
 
   const sliderOptions = {
     start: filterConfig.current,
@@ -147,17 +125,17 @@ const initSlider = () => {
     connect: 'lower',
   };
 
-  if (slider?.noUiSlider) {
-    slider.noUiSlider.updateOptions(sliderOptions, true);
+  if (EFFECT_SLIDER_ELEMENT?.noUiSlider) {
+    EFFECT_SLIDER_ELEMENT.noUiSlider.updateOptions(sliderOptions, true);
   } else {
-    noUiSlider.create(slider, sliderOptions);
+    noUiSlider.create(EFFECT_SLIDER_ELEMENT, sliderOptions);
   }
 
-  slider.noUiSlider.on('update', () => {
-    document.querySelector('.effect-level__value').value = slider.noUiSlider.get();
+  EFFECT_SLIDER_ELEMENT.noUiSlider.on('update', () => {
+    EFFECT_LEVEL_VALUE_ELEMENT.value = EFFECT_SLIDER_ELEMENT.noUiSlider.get();
 
-    preview.style.filter = filters[filter].filter(slider.noUiSlider.get());
-    filters[filter].current = slider.noUiSlider.get();
+    preview.style.filter = EFFECTS_FILTERS[filter].filter(EFFECT_SLIDER_ELEMENT.noUiSlider.get());
+    EFFECTS_FILTERS[filter].current = EFFECT_SLIDER_ELEMENT.noUiSlider.get();
   });
 };
 
@@ -165,22 +143,20 @@ const initSlider = () => {
  * Add event listeners for all filter setters
  */
 const initFilters = () => {
-  const filterRadios = document.querySelectorAll('.effects__radio');
-
-  filterRadios.forEach((radio) => {
-    radio.addEventListener('click', (e) => {
+  EFFECT_FILTER_RADIOS.forEach((radio) => {
+    radio.addEventListener('click', (event) => {
       if (filter) {
         preview.classList.remove(`effects__preview--${filter}`);
       }
 
-      preview.classList.add(`effects__preview--${e.target.value}`);
+      preview.classList.add(`effects__preview--${event.target.value}`);
 
-      filter = e.target.value === 'none' ? null : e.target.value;
+      filter = event.target.value === 'none' ? null : event.target.value;
 
       if (filter) {
         initSlider();
       } else {
-        document.querySelector('.effect-level').classList.add('hidden');
+        EFFECT_LEVEL_ELEMENT.classList.add('hidden');
         preview.style.filter = null;
       }
     });
@@ -191,21 +167,18 @@ const initFilters = () => {
  * Add event listeners for all add/edit image form controls
  */
 const initControls = () => {
-  const addImageForm = document.querySelector('#upload-select-image');
-
   const validator = new Validator(Validator.ADD_IMAGE_FORM_VALIDATOR);
 
-  addImageForm.addEventListener('submit', validator.validate);
+  UPLOAD_FORM_ELEMENT.addEventListener('submit', validator.validate);
 
-  document.querySelector('#upload-cancel').addEventListener('click', closeEditor);
+  UPLOAD_CANCEL_ELEMENT.addEventListener('click', closeEditor);
 
-  document.querySelector('#upload-file').onchange = () => editImage();
+  UPLOAD_FILE_ELEMENT.onchange = () => editImage();
 
-  document
-    .querySelector('.scale__control--bigger')
+  EFFECT_SCALE_CONTROL_BIGGER_ELEMENT
     .addEventListener('click', () => scaleImage('bigger'));
-  document
-    .querySelector('.scale__control--smaller')
+
+  EFFECT_SCALE_CONTROL_SMALLER_ELEMENT
     .addEventListener('click', () => scaleImage('smaller'));
 };
 
@@ -213,7 +186,7 @@ const initControls = () => {
  * Add event listeners on add image form && add validation
  */
 const initAddImageForm = () => {
-  document.querySelector('.effect-level').classList.add('hidden');
+  EFFECT_LEVEL_ELEMENT.classList.add('hidden');
 
   initControls();
   switchFieldsFocus();
