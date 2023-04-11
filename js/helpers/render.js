@@ -1,3 +1,22 @@
+import {
+  ALERT_ELEMENT,
+  ALERT_MESSAGE_ELEMENT,
+  ALERT_TITLE_ELEMENT,
+  BIG_PICTURE_CANCEL_ELEMENT,
+  BIG_PICTURE_COMMENTS_COUNT_ELEMENT,
+  BIG_PICTURE_DESCRIPTION_ELEMENT,
+  BIG_PICTURE_ELEMENT,
+  BIG_PICTURE_IMG_ELEMENT,
+  BIG_PICTURE_LIKES_COUNT_ELEMENT,
+  COMMENT_TEMPLATE,
+  COMMENTS_COUNT_ELEMENT,
+  COMMENTS_ELEMENT,
+  COMMENTS_LOADER_ELEMENT,
+  PICTURE_TEMPLATE,
+  PICTURES_ELEMENT,
+  PICTURES_ELEMENTS
+} from '../utils/const.js';
+
 let commentsCount = 0;
 
 const alertsQueue = [];
@@ -7,21 +26,19 @@ let isAlertActive = false;
  * Show big picture block
  */
 const showBigPicture = () => {
-  document.querySelector('.big-picture').classList.remove('hidden');
-  document.querySelector('body').classList.add('modal-open');
+  BIG_PICTURE_ELEMENT.classList.remove('hidden');
+  document.body.classList.add('modal-open');
 };
 
 /**
  * Hide big picture block && remove comments
  */
 const closeBigPicture = () => {
-  document.querySelector('.big-picture').classList.add('hidden');
-  document.querySelector('body').classList.remove('modal-open');
+  BIG_PICTURE_ELEMENT.classList.add('hidden');
+  document.body.classList.remove('modal-open');
 
-  const commentsBlock = document.querySelector('.social__comments');
-
-  while (commentsBlock.firstChild) {
-    commentsBlock.removeChild(commentsBlock.firstChild);
+  while (COMMENTS_ELEMENT.firstChild) {
+    COMMENTS_ELEMENT.removeChild(COMMENTS_ELEMENT.firstChild);
   }
 
   commentsCount = 0;
@@ -35,9 +52,7 @@ const closeBigPicture = () => {
  * @return {Node} Result Node
  */
 const prepareComment = (comment) => {
-  const template = document.querySelector('#comments');
-
-  const node = template.content.cloneNode(true);
+  const node = COMMENT_TEMPLATE.content.cloneNode(true);
 
   node.querySelector('.social__picture').src = comment.avatar;
   node.querySelector('.social__picture').alt = comment.name;
@@ -54,9 +69,7 @@ const prepareComment = (comment) => {
  * @return {Node} Result Node
  */
 const preparePicture = (post) => {
-  const template = document.querySelector('#picture');
-
-  const node = template.content.cloneNode(true);
+  const node = PICTURE_TEMPLATE.content.cloneNode(true);
 
   node.querySelector('.picture').id = post.id.toString();
   node.querySelector('.picture__img').src = post.url;
@@ -72,35 +85,29 @@ const preparePicture = (post) => {
  * @param {Comment[]} comments
  */
 const renderComments = (comments) => {
-  const commentsBlock = document.querySelector('.social__comments');
-
   const commentsFragment = new DocumentFragment();
 
   if (comments.length > 5) {
-    document.querySelector('.social__comment-count').classList.remove('hidden');
-    document.querySelector('.comments-loader').classList.remove('hidden');
+    COMMENTS_COUNT_ELEMENT.classList.remove('hidden');
+    COMMENTS_LOADER_ELEMENT.classList.remove('hidden');
   } else {
-    document.querySelector('.social__comment-count').classList.add('hidden');
-    document.querySelector('.comments-loader').classList.add('hidden');
+    COMMENTS_COUNT_ELEMENT.classList.add('hidden');
+    COMMENTS_LOADER_ELEMENT.classList.add('hidden');
   }
 
-  const _comments = comments.length > 5
-    ? comments.slice(commentsCount, commentsCount + 5 > comments.length ? comments.length : commentsCount + 5)
-    : comments;
+  const _comments = comments.length > 5 ? comments.slice(commentsCount, commentsCount + 5 > comments.length ? comments.length : commentsCount + 5) : comments;
 
   commentsCount = commentsCount + 5 > comments.length ? comments.length : commentsCount + 5;
 
   if (commentsCount === comments.length) {
-    document.querySelector('.comments-loader').classList.add('hidden');
+    COMMENTS_LOADER_ELEMENT.classList.add('hidden');
   }
 
-  _comments
-    .forEach((comment) => commentsFragment.append(prepareComment(comment)));
+  _comments.forEach((comment) => commentsFragment.append(prepareComment(comment)));
 
-  commentsBlock.appendChild(commentsFragment);
+  COMMENTS_ELEMENT.appendChild(commentsFragment);
 
-  document.querySelector('.social__comment-count').innerHTML =
-    `${commentsCount.toString()} из <span class='comments-count'>${comments.length}</span> комментариев`;
+  COMMENTS_COUNT_ELEMENT.innerHTML = `${commentsCount.toString()} из <span class='comments-count'>${comments.length}</span> комментариев`;
 };
 
 /**
@@ -113,43 +120,38 @@ const renderPictures = (posts) => {
 
   posts.forEach((post) => picturesFragment.append(preparePicture(post)));
 
-  const picturesBlock = document.querySelector('.pictures');
+  PICTURES_ELEMENT.appendChild(picturesFragment);
 
-  picturesBlock.appendChild(picturesFragment);
-
-  const pictures = document.querySelectorAll('.picture');
-
-  pictures.forEach((picture) => {
-    picture.addEventListener('click', (e) => {
-      const element = e.target.parentElement;
+  PICTURES_ELEMENTS.forEach((picture) => {
+    picture.addEventListener('click', (event) => {
+      const element = event.target.parentElement;
 
       const post = posts[element.id];
 
-      document.querySelector('.big-picture__img').children[0].src = post.url;
-      document.querySelector('.likes-count').textContent = post.likes.toString();
-      document.querySelector('.comments-count').textContent = post.comments.length.toString();
-      document.querySelector('.social__caption').textContent = post.description;
+      BIG_PICTURE_IMG_ELEMENT.children[0].src = post.url;
+      BIG_PICTURE_LIKES_COUNT_ELEMENT.textContent = post.likes.toString();
+      BIG_PICTURE_COMMENTS_COUNT_ELEMENT.textContent = post.comments.length.toString();
+      BIG_PICTURE_DESCRIPTION_ELEMENT.textContent = post.description;
 
       renderComments(post.comments);
 
       /** Event listener **/
       const eventRenderComments = () => renderComments(post.comments);
 
-      const loader = document.querySelector('.social__comments-loader');
+      COMMENTS_LOADER_ELEMENT.replaceWith(COMMENTS_LOADER_ELEMENT.cloneNode(true));
 
-      loader.replaceWith(loader.cloneNode(true));
-
-      document.querySelector('.social__comments-loader').addEventListener('click', eventRenderComments);
+      COMMENTS_LOADER_ELEMENT.addEventListener('click', eventRenderComments);
 
       showBigPicture();
     });
   });
 
-  document
-    .querySelector('.big-picture__cancel')
-    .addEventListener('click', closeBigPicture);
+  BIG_PICTURE_CANCEL_ELEMENT.addEventListener('click', closeBigPicture);
 };
 
+/**
+ * Render notification about success or error
+ */
 const renderAlert = () => {
   if (isAlertActive) {
     return;
@@ -157,18 +159,19 @@ const renderAlert = () => {
 
   isAlertActive = true;
 
-  const data = alertsQueue.shift();
+  const alert = alertsQueue.shift();
 
-  const alert = document.querySelector('.alert');
+  const type = alert.isError ? 'error' : 'success';
 
-  const type = data.isError ? 'error' : 'success';
+  ALERT_MESSAGE_ELEMENT.textContent = alert.message;
 
-  document.querySelector('.alert__message').textContent = data.message;
+  ALERT_TITLE_ELEMENT.textContent = alert.isError ? 'Ошибка' : 'Успех';
 
-  document.querySelector('.alert__title').textContent = data.isError ? 'Ошибка' : 'Успех';
-  alert.classList.add(`alert--${type}`);
+  ALERT_ELEMENT.classList.add(`alert--${type}`);
+
   setTimeout(() => {
-    alert.classList.remove(`alert--${type}`);
+    ALERT_ELEMENT.classList.remove(`alert--${type}`);
+
     isAlertActive = false;
 
     if (alertsQueue.length > 0) {
@@ -177,6 +180,12 @@ const renderAlert = () => {
   }, 6500);
 };
 
+/**
+ * Add notification about success or error to queue
+ *
+ * @param {boolean} isError
+ * @param {string} message
+ */
 const showAlert = (isError, message) => {
   alertsQueue.push({isError, message});
 

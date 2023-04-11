@@ -1,18 +1,19 @@
 import {closeBigPicture, showAlert} from './helpers/render.js';
 import {closeEditor, initAddImageForm, isFieldInFocus} from './helpers/addImage.js';
 import ApiService from './api/ApiService.js';
+import {IMAGE_FILTERS_ELEMENT} from './utils/const.js';
 
 (new ApiService())
   .getPosts()
   .then(() => {
-    document.querySelector('.img-filters').classList.remove('img-filters--inactive');
+    IMAGE_FILTERS_ELEMENT.classList.remove('img-filters--inactive');
   })
-  .catch((e) => showAlert(true, e.message));
+  .catch((event) => showAlert(true, event.message));
 
 initAddImageForm();
 
-document.addEventListener('keydown', (e) => {
-  if (e.code === 'Escape') {
+document.addEventListener('keydown', (event) => {
+  if (event.code === 'Escape') {
     if (!isFieldInFocus) {
       closeBigPicture();
       closeEditor();
