@@ -35,7 +35,7 @@ export default async () => {
       closeEditor();
       showAlert(false, 'Фотография отправлена');
     })
-    .catch((event) => showAlert(true, event.message));
+    .catch((error) => showAlert(true, error.message));
 
   return true;
 };

@@ -8,7 +8,7 @@ import {IMAGE_FILTERS_ELEMENT} from './utils/const.js';
   .then(() => {
     IMAGE_FILTERS_ELEMENT.classList.remove('img-filters--inactive');
   })
-  .catch((event) => showAlert(true, event.message));
+  .catch((error) => showAlert(true, error.message));
 
 initAddImageForm();
 
