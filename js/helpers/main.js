@@ -10,11 +10,11 @@ const validateStringLength = (string, maxLength) => string.trim().length <= maxL
 /**
  * Checks if a string is a palindrome
  *
- * @param {string} string String to check
+ * @param {string} value String to check
  * @return {boolean} String test result
  */
-const isStringPalindrome = (string) => {
-  const result = string.toLowerCase().replace(/\W/g, '');
+const isStringPalindrome = (value) => {
+  const result = value.toLowerCase().replace(/\W/g, '');
 
   return result === [...result].reverse().join('');
 };
@@ -22,10 +22,10 @@ const isStringPalindrome = (string) => {
 /**
  * Gets all numbers from string and concat them
  *
- * @param val Any value which contains numbers
+ * @param value Any value which contains numbers
  * @return {number|NaN} All numbers that were found and combined into one number or NaN if numbers not exists
  */
-const getNumbersFromString = (val) => parseInt(val.toString().replace(/\D/g, ''), 10);
+const getNumbersFromString = (value) => parseInt(value.toString().replace(/\D/g, ''), 10);
 
 /**
  * If the length of the string is less than that specified in minLength, then it inserts the value
@@ -62,10 +62,10 @@ const supplementString = (string, minLength, filling) => {
 
   const insertsCount = diff / splitFilling.length;
 
-  const result = [];
+  const insertValues = [];
 
   for (let i = 0; i < Math.floor(insertsCount); i++) {
-    result.unshift(filling);
+    insertValues.unshift(filling);
   }
 
   if (insertsCount % 1 !== 0) {
@@ -73,11 +73,11 @@ const supplementString = (string, minLength, filling) => {
     const symbolsCount = Math.ceil(splitFilling.length * float);
 
     for (let i = 0; i < symbolsCount; i++) {
-      result.unshift(splitFilling[i]);
+      insertValues.unshift(splitFilling[i]);
     }
   }
 
-  splitString.unshift(result.join(''));
+  splitString.unshift(insertValues.join(''));
 
   return splitString.join('');
 };
@@ -85,13 +85,13 @@ const supplementString = (string, minLength, filling) => {
 /**
  * Returns a floating point number compressed to the minimum length without losing the mathematical value
  *
- * @param val Any value which contains number (integer or float)
+ * @param value Any value which contains number (integer or float)
  * @return {string} Floating point number
  */
-const getClearFloat = (val) =>
-  val - parseInt(val, 10) === 0 ?
-    parseFloat(val).toFixed(1) :
-    Number(parseFloat(val).toFixed(4)).toString();
+const getClearFloat = (value) =>
+  value - parseInt(value, 10) === 0 ?
+    parseFloat(value).toFixed(1) :
+    Number(parseFloat(value).toFixed(4)).toString();
 
 /**
  * Gets random integer in range
