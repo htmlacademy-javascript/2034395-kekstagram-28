@@ -9,7 +9,7 @@ import {HASHTAG_REGEX, HASHTAGS_ELEMENT, UPLOAD_FORM_ELEMENT} from '../utils/con
  * @return {boolean}
  */
 export default async () => {
-  const pristine = new Pristine(UPLOAD_FORM_ELEMENT);
+  const pristine = new Pristine(UPLOAD_FORM_ELEMENT());
 
   const isDuplicates = (hashtags) => hashtags.length !== new Set(hashtags).size;
 
@@ -29,9 +29,9 @@ export default async () => {
     return false;
   }
 
-  await (new ApiService()).createPost(new FormData(UPLOAD_FORM_ELEMENT))
+  await (new ApiService()).createPost(new FormData(UPLOAD_FORM_ELEMENT()))
     .then(() => {
-      UPLOAD_FORM_ELEMENT.reset();
+      UPLOAD_FORM_ELEMENT().reset();
       closeEditor();
       showAlert(false, 'Фотография отправлена');
     })
