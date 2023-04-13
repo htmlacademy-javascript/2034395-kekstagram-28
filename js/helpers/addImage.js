@@ -15,11 +15,12 @@ import {
   SCALE_VALUE_ELEMENT, UPLOAD_CANCEL_ELEMENT,
   UPLOAD_FILE_ELEMENT,
   UPLOAD_FORM_ELEMENT,
-  UPLOAD_FORM_OVERLAY_ELEMENT
+  UPLOAD_FORM_OVERLAY_ELEMENT, UPLOAD_FORM_PREVIEW_ELEMENT
 } from '../utils/const.js';
 import {showAlert} from './render.js';
+import closeEventListener from '../utils/closeEventListener.js';
 
-const preview = document.querySelector('.img-upload__preview').children[0];
+const preview = UPLOAD_FORM_PREVIEW_ELEMENT().children[0];
 
 let isFieldInFocus = false;
 let scale = IMAGE_SCALE_MAX;
@@ -29,25 +30,29 @@ let filter = 'none';
  * Close add image form
  */
 const closeEditor = () => {
-  UPLOAD_FORM_OVERLAY_ELEMENT.classList.add('hidden');
+  UPLOAD_FORM_OVERLAY_ELEMENT().classList.add('hidden');
   document.body.classList.remove('modal-open');
 
-  UPLOAD_FORM_ELEMENT.reset();
+  UPLOAD_FORM_ELEMENT().reset();
+
+  document.removeEventListener('keydown', closeEventListener);
 };
 
 /**
  * Open add image form after image load
  */
 const editImage = () => {
-  UPLOAD_FORM_OVERLAY_ELEMENT.classList.remove('hidden');
+  document.addEventListener('keydown', closeEventListener);
+
+  UPLOAD_FORM_OVERLAY_ELEMENT().classList.remove('hidden');
   document.body.classList.add('modal-open');
 
-  const file = UPLOAD_FILE_ELEMENT.files[0];
+  const file = UPLOAD_FILE_ELEMENT().files[0];
 
   if (FILE_TYPES.some((ext) => file.name.toLowerCase().endsWith(ext))) {
     preview.src = URL.createObjectURL(file);
 
-    EFFECTS_PREVIEW_ELEMENTS.forEach((el) => {
+    EFFECTS_PREVIEW_ELEMENTS().forEach((el) => {
       el.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
     });
   } else {
@@ -83,24 +88,24 @@ const scaleImage = (type = null) => {
   }
 
   preview.style.transform = `scale(${scale / 100})`;
-  SCALE_VALUE_ELEMENT.value = `${scale}%`;
+  SCALE_VALUE_ELEMENT().value = `${scale}%`;
 };
 
 /**
  * Toggle Esc close event on focus/blur for hashtags/description fields
  */
 const switchFieldsFocus = () => {
-  HASHTAGS_ELEMENT.onfocus = () => {
+  HASHTAGS_ELEMENT().onfocus = () => {
     isFieldInFocus = true;
   };
-  HASHTAGS_ELEMENT.onblur = () => {
+  HASHTAGS_ELEMENT().onblur = () => {
     isFieldInFocus = false;
   };
 
-  DESCRIPTION_ELEMENT.onfocus = () => {
+  DESCRIPTION_ELEMENT().onfocus = () => {
     isFieldInFocus = true;
   };
-  DESCRIPTION_ELEMENT.onblur = () => {
+  DESCRIPTION_ELEMENT().onblur = () => {
     isFieldInFocus = false;
   };
 };
@@ -109,11 +114,11 @@ const switchFieldsFocus = () => {
  * Add and configure noUiSlider
  */
 const initSlider = () => {
-  EFFECT_LEVEL_ELEMENT.classList.remove('hidden');
+  EFFECT_LEVEL_ELEMENT().classList.remove('hidden');
 
   const filterConfig = EFFECTS_FILTERS[filter];
 
-  EFFECT_LEVEL_VALUE_ELEMENT.value = filterConfig.current;
+  EFFECT_LEVEL_VALUE_ELEMENT().value = filterConfig.current;
 
   const sliderOptions = {
     start: filterConfig.current,
@@ -125,17 +130,17 @@ const initSlider = () => {
     connect: 'lower',
   };
 
-  if (EFFECT_SLIDER_ELEMENT?.noUiSlider) {
-    EFFECT_SLIDER_ELEMENT.noUiSlider.updateOptions(sliderOptions, true);
+  if (EFFECT_SLIDER_ELEMENT().noUiSlider) {
+    EFFECT_SLIDER_ELEMENT().noUiSlider.updateOptions(sliderOptions, true);
   } else {
-    noUiSlider.create(EFFECT_SLIDER_ELEMENT, sliderOptions);
+    noUiSlider.create(EFFECT_SLIDER_ELEMENT(), sliderOptions);
   }
 
-  EFFECT_SLIDER_ELEMENT.noUiSlider.on('update', () => {
-    EFFECT_LEVEL_VALUE_ELEMENT.value = EFFECT_SLIDER_ELEMENT.noUiSlider.get();
+  EFFECT_SLIDER_ELEMENT().noUiSlider.on('update', () => {
+    EFFECT_LEVEL_VALUE_ELEMENT().value = EFFECT_SLIDER_ELEMENT().noUiSlider.get();
 
-    preview.style.filter = EFFECTS_FILTERS[filter].filter(EFFECT_SLIDER_ELEMENT.noUiSlider.get());
-    EFFECTS_FILTERS[filter].current = EFFECT_SLIDER_ELEMENT.noUiSlider.get();
+    preview.style.filter = EFFECTS_FILTERS[filter].filter(EFFECT_SLIDER_ELEMENT().noUiSlider.get());
+    EFFECTS_FILTERS[filter].current = EFFECT_SLIDER_ELEMENT().noUiSlider.get();
   });
 };
 
@@ -143,7 +148,7 @@ const initSlider = () => {
  * Add event listeners for all filter setters
  */
 const initFilters = () => {
-  EFFECT_FILTER_RADIOS.forEach((radio) => {
+  EFFECT_FILTER_RADIOS().forEach((radio) => {
     radio.addEventListener('click', (event) => {
       if (filter) {
         preview.classList.remove(`effects__preview--${filter}`);
@@ -156,7 +161,7 @@ const initFilters = () => {
       if (filter) {
         initSlider();
       } else {
-        EFFECT_LEVEL_ELEMENT.classList.add('hidden');
+        EFFECT_LEVEL_ELEMENT().classList.add('hidden');
         preview.style.filter = null;
       }
     });
@@ -169,16 +174,16 @@ const initFilters = () => {
 const initControls = () => {
   const validator = new Validator(Validator.ADD_IMAGE_FORM_VALIDATOR);
 
-  UPLOAD_FORM_ELEMENT.addEventListener('submit', validator.validate);
+  UPLOAD_FORM_ELEMENT().addEventListener('submit', validator.validate);
 
-  UPLOAD_CANCEL_ELEMENT.addEventListener('click', closeEditor);
+  UPLOAD_CANCEL_ELEMENT().addEventListener('click', closeEditor);
 
-  UPLOAD_FILE_ELEMENT.onchange = () => editImage();
+  UPLOAD_FILE_ELEMENT().onchange = () => editImage();
 
-  EFFECT_SCALE_CONTROL_BIGGER_ELEMENT
+  EFFECT_SCALE_CONTROL_BIGGER_ELEMENT()
     .addEventListener('click', () => scaleImage('bigger'));
 
-  EFFECT_SCALE_CONTROL_SMALLER_ELEMENT
+  EFFECT_SCALE_CONTROL_SMALLER_ELEMENT()
     .addEventListener('click', () => scaleImage('smaller'));
 };
 
@@ -186,7 +191,7 @@ const initControls = () => {
  * Add event listeners on add image form && add validation
  */
 const initAddImageForm = () => {
-  EFFECT_LEVEL_ELEMENT.classList.add('hidden');
+  EFFECT_LEVEL_ELEMENT().classList.add('hidden');
 
   initControls();
   switchFieldsFocus();

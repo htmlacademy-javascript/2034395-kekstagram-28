@@ -8,9 +8,11 @@ class ApiService {
   /**
    * Fetch posts data from htmlacademy api && render them
    *
+   * @param {string} filter
+   *
    * @throws NoContentException
    */
-  async getPosts() {
+  async getPosts(filter) {
     await fetch(`${API_URI}/data`)
       .then((data) => {
         data.json()
@@ -23,7 +25,7 @@ class ApiService {
               return new Post(post.id, post.url, post.description, post.likes, post.comments);
             });
 
-            renderPictures(_posts);
+            renderPictures(_posts, filter);
           });
       })
       .catch((error) => showAlert(true, error.message));
@@ -39,11 +41,10 @@ class ApiService {
   async createPost(data) {
     await fetch(API_URI, {
       method: 'POST',
-      mode: 'no-cors',
       body: data,
     })
       .then((response) => {
-        if (response.status === 200) {
+        if (!response.ok) {
           throw new PostNotSentException();
         }
       });
