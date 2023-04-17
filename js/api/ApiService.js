@@ -14,8 +14,12 @@ class ApiService {
    */
   async getPosts(filter) {
     await fetch(`${API_URI}/data`)
-      .then((data) => {
-        data.json()
+      .then((response) => {
+        if (!response.ok) {
+          throw new NoContentException();
+        }
+
+        response.json()
           .then((posts) => {
             const _posts = posts.map((post) => {
               if (post.id === undefined) {
